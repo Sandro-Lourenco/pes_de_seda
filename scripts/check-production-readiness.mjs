@@ -1,8 +1,10 @@
 const goLive = process.argv.includes("--go-live");
 const errors = [];
 const warnings = [];
+const productionOrigin = "https://pesdeseda.com.br";
 
 const required = [
+  "APP_URL",
   "ASAAS_ACCESS_TOKEN",
   "ASAAS_WEBHOOK_TOKEN",
   "ASAAS_SUCCESS_URL",
@@ -29,17 +31,35 @@ if (process.env.PRODUCT_PRICE_CENTS !== "4990") {
   errors.push("PRODUCT_PRICE_CENTS deve permanecer em 4990 (R$ 49,90).");
 }
 
+if (process.env.APP_URL !== productionOrigin) {
+  errors.push(`APP_URL deve ser ${productionOrigin}.`);
+}
+
 for (const name of ["ASAAS_SUCCESS_URL", "ASAAS_CANCEL_URL", "ASAAS_EXPIRED_URL", "ASAAS_WEBHOOK_URL"]) {
   const value = process.env[name];
   if (!value) continue;
   try {
     const url = new URL(value);
     if (url.protocol !== "https:") errors.push(`${name} precisa usar HTTPS.`);
-    if (["localhost", "127.0.0.1"].includes(url.hostname) || url.hostname.includes("seu-dominio")) {
-      errors.push(`${name} ainda contém um endereço de exemplo ou local.`);
-    }
+    if (url.origin !== productionOrigin) errors.push(`${name} deve usar o domínio ${productionOrigin}.`);
   } catch {
     errors.push(`${name} não é uma URL válida.`);
+  }
+}
+
+const expectedPaths = {
+  ASAAS_SUCCESS_URL: "/pedido",
+  ASAAS_CANCEL_URL: "/pedido",
+  ASAAS_EXPIRED_URL: "/pedido",
+  ASAAS_WEBHOOK_URL: "/api/webhooks/asaas",
+};
+for (const [name, expectedPath] of Object.entries(expectedPaths)) {
+  const value = process.env[name];
+  if (!value) continue;
+  try {
+    if (new URL(value).pathname !== expectedPath) errors.push(`${name} deve terminar em ${expectedPath}.`);
+  } catch {
+    // A URL inválida já foi registrada acima.
   }
 }
 
@@ -62,6 +82,9 @@ if ((process.env.PDF_STORAGE_KEY ?? "").toLowerCase().includes("public")) {
 
 if (goLive && process.env.SALES_ENABLED !== "true") {
   errors.push("Para a checagem de abertura, SALES_ENABLED deve ser true após aprovação expressa do titular.");
+}
+if (goLive && process.env.SITE_INDEXABLE !== "true") {
+  errors.push("SITE_INDEXABLE deve ser true após a aprovação da publicação comercial.");
 }
 if (!goLive && process.env.SALES_ENABLED === "true") {
   warnings.push("SALES_ENABLED está true. Mantenha false até concluir a homologação e receber aprovação do titular.");

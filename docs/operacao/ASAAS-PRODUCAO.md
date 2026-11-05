@@ -8,19 +8,19 @@ Não existe um link de pagamento permanente. A aplicação cria uma sessão dife
 
 ## Endereços usados
 
-Substitua `SEU-DOMINIO` pelo domínio definitivo da publicação.
+O domínio definitivo da publicação é `https://pesdeseda.com.br`.
 
 | Finalidade | Endereço |
 |---|---|
-| Botão de compra chama o servidor | `POST https://SEU-DOMINIO/api/checkout` |
+| Botão de compra chama o servidor | `POST https://pesdeseda.com.br/api/checkout` |
 | API Asaas Sandbox | `POST https://api-sandbox.asaas.com/v3/checkouts` |
 | Checkout Sandbox criado por pedido | `https://sandbox.asaas.com/checkoutSession/show?id=ID_RETORNADO` |
 | API Asaas produção | `POST https://api.asaas.com/v3/checkouts` |
 | Checkout produção criado por pedido | `https://asaas.com/checkoutSession/show?id=ID_RETORNADO` |
-| Retorno de sucesso, cancelamento ou expiração | `https://SEU-DOMINIO/pedido` |
-| Webhook Asaas | `POST https://SEU-DOMINIO/api/webhooks/asaas` |
-| Consulta privada do pedido | `GET https://SEU-DOMINIO/api/pedido` |
-| Download protegido | `GET https://SEU-DOMINIO/api/download` |
+| Retorno de sucesso, cancelamento ou expiração | `https://pesdeseda.com.br/pedido` |
+| Webhook Asaas | `POST https://pesdeseda.com.br/api/webhooks/asaas` |
+| Consulta privada do pedido | `GET https://pesdeseda.com.br/api/pedido` |
+| Download protegido | `GET https://pesdeseda.com.br/api/download` |
 
 O callback `/pedido` não confirma pagamento. Mesmo que o comprador volte antes do webhook, a página mostra “Aguardando confirmação” e o PDF continua bloqueado. Somente o evento autenticado e idempotente `CHECKOUT_PAID` libera o direito.
 
@@ -42,7 +42,7 @@ Nome, CPF e dados de cartão são coletados na página hospedada pelo Asaas. A a
 1. Publique a aplicação em runtime Node.js com HTTPS e `SALES_ENABLED=false`.
 2. Configure no cofre da hospedagem as variáveis de `.env.production.example`; nunca envie chaves ao Git ou ao navegador.
 3. Use uma chave criada na conta **de produção** e `ASAAS_API_URL=https://api.asaas.com/v3`.
-4. No Asaas de produção, registre `https://SEU-DOMINIO/api/webhooks/asaas`, gere um token próprio de 32 a 255 caracteres e use o mesmo valor em `ASAAS_WEBHOOK_TOKEN`. Não use a API key como token do webhook.
+4. No Asaas de produção, registre `https://pesdeseda.com.br/api/webhooks/asaas`, gere um token próprio de 32 a 255 caracteres e use o mesmo valor em `ASAAS_WEBHOOK_TOKEN`. Não use a API key como token do webhook.
 5. Assine pelo menos `CHECKOUT_CREATED`, `CHECKOUT_PAID`, `CHECKOUT_CANCELED` e `CHECKOUT_EXPIRED`. Mantenha os eventos de estorno/chargeback já tratados pela aplicação quando disponíveis na configuração da conta.
 6. Coloque o PDF final fora de `public/` e configure `PDF_STORAGE_KEY` em armazenamento privado/persistente.
 7. Garanta banco persistente. O SQLite atual requer uma única instância Node.js com volume persistente; Vercel/serverless ou múltiplas instâncias exigem o adaptador PostgreSQL antes da abertura.
@@ -58,7 +58,7 @@ Nome, CPF e dados de cartão são coletados na página hospedada pelo Asaas. A a
 
 ## Pendências antes do go-live
 
-- domínio e provedor de hospedagem definitivos;
+- apontamento DNS e certificado HTTPS do domínio `pesdeseda.com.br`;
 - chave e webhook da conta Asaas de produção;
 - PDF final em armazenamento privado;
 - banco persistente compatível com a hospedagem escolhida;

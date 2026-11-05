@@ -217,3 +217,12 @@ As capturas foram geradas contra `next start`, sem compradores, credenciais ou P
 - Foram criados `.env.production.example`, `scripts/check-production-readiness.mjs` e `docs/operacao/ASAAS-PRODUCAO.md`. A checagem reprova URL local, preço divergente, token de webhook inválido, PDF público e abertura sem configuração completa, sem imprimir segredos.
 - A interface informa explicitamente Pix e cartão. O checkout continua fechado em produção até domínio, banco persistente, PDF privado, webhook real, compra controlada e aprovação expressa do titular.
 - Verificação observada: `npm run lint` passou; Vitest passou 12/12; `npm run build` compilou todas as rotas; Playwright passou 12/12; o modelo incompleto foi reprovado pela trava e uma configuração inteiramente fictícia completa foi aprovada, sem chamada externa.
+
+### Domínio e pacote de hospedagem — 05/11/2026
+
+- `https://pesdeseda.com.br` foi definido como domínio oficial em callbacks, webhook, metadados canônicos e modelo de produção.
+- O README passou a documentar DNS, HTTPS, variáveis, Asaas, homologação, abertura, monitoramento, backup e rollback.
+- Foram adicionados `Dockerfile`, `.dockerignore` e `compose.production.example.yml` para uma instância Node.js 24 com volumes persistentes separados para SQLite e PDF privado.
+- `SITE_INDEXABLE=false` e `SALES_ENABLED=false` permanecem como travas iniciais. A checagem de go-live exige ambos habilitados somente depois da compra controlada e da aprovação do titular.
+- A página comercial passou a ser renderizada dinamicamente para que a trava de vendas aplicada no ambiente de execução não fique congelada no build.
+- Verificação: lint passou; Vitest passou 12/12; build Next.js passou; Playwright passou 12/12; a imagem Docker foi construída, iniciou como usuário sem privilégios e respondeu HTTP 200; o runtime foi reduzido a dependências de produção com 0 vulnerabilidades conhecidas em `npm audit --omit=dev`.

@@ -7,6 +7,8 @@ import { Reveal } from "@/components/reveal";
 import { SiteHeader } from "@/components/site-header";
 import { formatProductPrice } from "@/lib/commerce/product";
 
+export const dynamic = "force-dynamic";
+
 export default function HomePage() {
   const salesEnabled = process.env.SALES_ENABLED === "true" && process.env.CHECKOUT_MODE === "asaas";
   const isSandbox = salesEnabled && (process.env.ASAAS_API_URL ?? "").includes("sandbox");

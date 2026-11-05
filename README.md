@@ -1,37 +1,263 @@
 # Pés de Seda
 
-Primeira versão navegável da landing page do e-book **Pés de Seda**, de Ana Maria Lourenço. A demonstração apresenta a composição editorial, a autora, a oferta e as perguntas frequentes. As vendas reais permanecem fechadas.
+Landing page e fluxo de venda do e-book **Pés de Seda**, de Ana Maria Lourenço.
 
-## Estado atual
+- Domínio oficial: [https://pesdeseda.com.br](https://pesdeseda.com.br)
+- Preço canônico: **R$ 49,90**
+- Pagamento: checkout hospedado pelo Asaas com **Pix e cartão de crédito**
+- Branch de publicação: `main`
+- Runtime: Node.js 24
 
-- Interface responsiva com HTML inicial renderizado pelo Next.js.
-- Direção visual de caderno de família contemporâneo, sem fotografia sintética: história entre gerações, índice em linhas, experiência de leitura, autora como dedicatória e oferta como colofão.
-- Movimento com `motion/react`, respeitando `prefers-reduced-motion`.
-- Checkout Asaas implementado no servidor com Pix e cartão de crédito e validado no Sandbox; continua desativado por padrão.
-- Preço canônico lido somente de `PRODUCT_PRICE_CENTS` no servidor.
-- Pedidos, tentativas, eventos e direitos persistidos em SQLite na simulação local.
-- PDF lido apenas de caminho privado configurado em `PDF_STORAGE_KEY`; nenhum PDF existe em `public/` ou nos testes.
-- Download exige pedido pago, direito ativo e token privado válido em toda requisição.
-- O preço canônico aprovado é R$ 49,90 (4.990 centavos), definido e validado no servidor.
-- Produção, webhook público, retrato, capa oficial e PDF final continuam pendentes.
+O site deve ser publicado primeiro com as vendas fechadas. A abertura comercial só acontece depois de validar domínio, HTTPS, webhook, banco, PDF privado e uma compra controlada em produção.
 
-## Stack e decisões
+## Estado da entrega
 
-| Parte | Escolha | Motivo |
-|---|---|---|
-| Interface e servidor | Next.js 16.4.5, React 19.3.1, TypeScript 6.0.3 | HTML inicial, rotas de servidor e uma única aplicação para a prévia |
-| Movimento | Motion 14.9.0 | `MotionConfig` com preferência do usuário e animações isoladas |
-| Banco local | `node:sqlite` do Node 24 | Persistência local sem serviço externo ou credencial |
-| Banco de produção | PostgreSQL gerenciado, adaptando `CommerceRepository` | Concorrência e operação multi-instância; provedor ainda não escolhido |
-| PDF local | Arquivo fora de `public/`, apontado por variável de ambiente | O servidor revalida o direito antes de servir o arquivo |
-| PDF de produção | Armazenamento privado compatível com URL assinada curta | O provedor e o adaptador ainda dependem da operação comercial |
-| Hospedagem | Runtime Node.js com HTTPS e armazenamento/banco externos | Evita depender do filesystem efêmero; fornecedor ainda depende do titular |
+- Interface responsiva e acessível.
+- Checkout Asaas criado somente no servidor.
+- Preço e credenciais ausentes do navegador.
+- Confirmação financeira exclusiva pelo webhook `CHECKOUT_PAID`.
+- Webhook autenticado e idempotente.
+- Retorno antecipado mantém “Aguardando confirmação” e bloqueia o PDF.
+- Download exige pedido pago e direito ativo.
+- Pix e cartão já validados no Sandbox.
+- Produção fechada por padrão com `SALES_ENABLED=false`.
 
-As fontes Source Serif 4 e Source Sans 3 são hospedadas no próprio bundle por meio dos pacotes Fontsource. As versões estão fixadas no `package.json` e o `package-lock.json` deve ser preservado.
+## Arquitetura de hospedagem
 
-## Instalar e abrir
+Esta versão utiliza SQLite e um PDF privado no filesystem. Portanto, a opção pronta para produção é:
 
-Requisitos usados nesta entrega: Node.js 24.18.1 e npm 11.16.0.
+- uma única instância Node.js;
+- volume persistente para `/app/data`;
+- volume privado para `/app/private`;
+- proxy HTTPS na frente da aplicação;
+- backups do banco e do PDF.
+
+Não publique esta versão diretamente em Vercel, funções serverless ou múltiplas réplicas. Esses ambientes exigem antes a implementação do repositório PostgreSQL e de armazenamento privado de objetos.
+
+## Arquivos para a hospedagem
+
+| Arquivo | Finalidade |
+|---|---|
+| `.env.production.example` | Modelo das variáveis, sem segredos |
+| `Dockerfile` | Build reproduzível com Node.js 24 |
+| `compose.production.example.yml` | Aplicação, portas e volumes persistentes |
+| `scripts/check-production-readiness.mjs` | Bloqueia configurações incompletas |
+| `docs/operacao/ASAAS-PRODUCAO.md` | Contrato detalhado do pagamento |
+
+## 1. Preparar DNS e servidor
+
+No provedor de DNS do domínio, configure:
+
+- registro `A` de `pesdeseda.com.br` apontando para o IPv4 do servidor;
+- registro `A` de `www.pesdeseda.com.br` para o mesmo IPv4, ou `CNAME` para `pesdeseda.com.br`;
+- se houver IPv6, o registro `AAAA` correspondente.
+
+No servidor Linux instale Git, Docker Engine, Docker Compose e um proxy HTTPS como Caddy. Libere apenas as portas públicas `80` e `443`. A porta `3000` permanece vinculada a `127.0.0.1`.
+
+## 2. Baixar o projeto
+
+```bash
+git clone https://github.com/Sandro-Lourenco/pes_de_seda.git
+cd pes_de_seda
+git checkout main
+```
+
+Para atualizações futuras:
+
+```bash
+git pull --ff-only origin main
+```
+
+## 3. Configurar as variáveis
+
+Crie o arquivo local de produção, que é ignorado pelo Git:
+
+```bash
+cp .env.production.example .env.production.local
+chmod 600 .env.production.local
+```
+
+Preencha no servidor:
+
+```dotenv
+SALES_ENABLED=false
+CHECKOUT_MODE=asaas
+PRODUCT_PRICE_CENTS=4990
+
+APP_URL=https://pesdeseda.com.br
+SITE_INDEXABLE=false
+
+ASAAS_API_URL=https://api.asaas.com/v3
+ASAAS_ACCESS_TOKEN='$aact_prod_COLOQUE_A_CHAVE_REAL_AQUI'
+ASAAS_WEBHOOK_TOKEN='COLOQUE_UM_TOKEN_ALEATORIO_DE_32_A_255_CARACTERES'
+
+ASAAS_SUCCESS_URL=https://pesdeseda.com.br/pedido
+ASAAS_CANCEL_URL=https://pesdeseda.com.br/pedido
+ASAAS_EXPIRED_URL=https://pesdeseda.com.br/pedido
+ASAAS_WEBHOOK_URL=https://pesdeseda.com.br/api/webhooks/asaas
+
+PDF_STORAGE_KEY=/app/private/pes-de-seda.pdf
+DATABASE_PATH=/app/data/pes-de-seda.sqlite
+```
+
+Use aspas simples na chave Asaas para preservar o caractere inicial `$`. Nunca envie `.env.production.local` por Git, e-mail ou mensagem pública. Em plataformas com cofre de segredos, cadastre as mesmas variáveis diretamente no painel.
+
+## 4. Instalar o PDF e criar os volumes
+
+```bash
+mkdir -p data private
+chmod 700 data private
+```
+
+Copie o PDF comercial final para:
+
+```text
+private/pes-de-seda.pdf
+```
+
+O PDF não pode ficar dentro de `public/`. O volume `private` é montado como somente leitura no contêiner.
+
+## 5. Validar antes da publicação
+
+Com Node.js 24 disponível no servidor:
+
+```bash
+npm ci
+npm run lint
+npm test
+npm run build
+npm run check:production
+```
+
+`npm run check:production` valida domínio, HTTPS, ambiente Asaas, preço, token do webhook, banco e PDF sem imprimir os segredos. Com `SALES_ENABLED=false`, ele verifica a pré-homologação.
+
+## 6. Subir com Docker
+
+```bash
+docker compose -f compose.production.example.yml build
+docker compose -f compose.production.example.yml up -d
+docker compose -f compose.production.example.yml ps
+docker compose -f compose.production.example.yml logs --tail=100 web
+```
+
+A aplicação ficará disponível internamente em `http://127.0.0.1:3000`. O healthcheck do Compose verifica a página automaticamente.
+
+## 7. Ativar HTTPS
+
+Exemplo de `/etc/caddy/Caddyfile`:
+
+```caddyfile
+www.pesdeseda.com.br {
+    redir https://pesdeseda.com.br{uri} permanent
+}
+
+pesdeseda.com.br {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:3000
+}
+```
+
+Depois:
+
+```bash
+sudo systemctl reload caddy
+```
+
+Confirme:
+
+```bash
+curl -I https://pesdeseda.com.br
+```
+
+O certificado precisa estar válido antes de configurar callbacks e webhook no Asaas.
+
+## 8. Configurar o Asaas de produção
+
+Na conta **de produção** do Asaas:
+
+1. Crie uma API key de produção e salve-a apenas no cofre do servidor.
+2. Cadastre o webhook `https://pesdeseda.com.br/api/webhooks/asaas`.
+3. Configure no webhook exatamente o mesmo token salvo em `ASAAS_WEBHOOK_TOKEN`.
+4. Ative pelo menos `CHECKOUT_CREATED`, `CHECKOUT_PAID`, `CHECKOUT_CANCELED` e `CHECKOUT_EXPIRED`.
+5. Quando disponíveis na conta, mantenha os eventos de estorno e chargeback tratados pela aplicação.
+
+Não use a API key como token do webhook. Sandbox e produção possuem chaves, dados e webhooks independentes.
+
+## 9. Homologar com vendas fechadas
+
+Mantenha:
+
+```dotenv
+SALES_ENABLED=false
+SITE_INDEXABLE=false
+```
+
+Verifique:
+
+- `https://pesdeseda.com.br` abre com HTTPS;
+- o botão mostra “Vendas em preparação”;
+- o endpoint do webhook está acessível ao Asaas e rejeita token incorreto;
+- o banco permanece após reiniciar o contêiner;
+- o PDF não possui URL pública;
+- callbacks retornam para `/pedido`;
+- logs não exibem chave, CPF, cartão ou token privado.
+
+## 10. Compra controlada e abertura
+
+Depois da aprovação do titular, altere temporariamente:
+
+```dotenv
+SALES_ENABLED=true
+SITE_INDEXABLE=false
+```
+
+Recrie o contêiner:
+
+```bash
+docker compose -f compose.production.example.yml up -d --build
+```
+
+Faça uma compra controlada de R$ 49,90 e confirme:
+
+1. o checkout oferece Pix e cartão;
+2. o retorno anterior ao webhook mostra “Aguardando confirmação”;
+3. o webhook `CHECKOUT_PAID` muda o pedido para pago;
+4. o download só abre depois da confirmação;
+5. webhook duplicado não duplica direito ou entrega;
+6. estorno/chargeback revoga o acesso.
+
+Após a compra controlada passar, defina:
+
+```dotenv
+SALES_ENABLED=true
+SITE_INDEXABLE=true
+```
+
+Execute a trava final e reinicie:
+
+```bash
+npm run check:production:go-live
+docker compose -f compose.production.example.yml up -d --build
+```
+
+## 11. Atualizar, monitorar e voltar atrás
+
+Atualização:
+
+```bash
+git pull --ff-only origin main
+npm ci
+npm run check
+docker compose -f compose.production.example.yml up -d --build
+```
+
+Para pausar vendas, altere `SALES_ENABLED=false` e `SITE_INDEXABLE=false` e reinicie o serviço. A aplicação continua disponível, mas não cria novos checkouts.
+
+Monitore respostas `5xx`, falhas de webhook, espaço em disco, integridade do volume `data`, tentativas presas e pedidos aguardando confirmação por tempo anormal.
+
+Faça backup periódico de `data/pes-de-seda.sqlite` e `private/pes-de-seda.pdf`. Para copiar o SQLite com segurança, pare o contêiner ou use uma ferramenta compatível com backup online do SQLite.
+
+## Desenvolvimento local
 
 ```powershell
 npm ci
@@ -39,78 +265,44 @@ Copy-Item .env.example .env.local
 npm run dev
 ```
 
-Abra `http://localhost:3000`. Para avaliar em um celular na mesma rede:
+Abra [http://localhost:3000](http://localhost:3000). O arquivo `.env.example` usa Sandbox/local e permanece fechado por padrão.
 
-```powershell
-npm run dev -- --hostname 0.0.0.0
+## Comandos do projeto
+
+```bash
+npm run dev                       # desenvolvimento
+npm run lint                      # lint
+npm test                          # testes de contratos e pagamento
+npm run build                     # build de produção
+npm run test:e2e                  # navegador e responsividade
+npm run check                     # lint + testes + build
+npm run check:production          # pré-homologação
+npm run check:production:go-live  # trava final de abertura
+npm start                         # servidor de produção
 ```
 
-Abra no celular `http://IP-DO-COMPUTADOR:3000`. Talvez seja necessário permitir o Node.js no firewall local.
+## Rotas comerciais
 
-## Testar e gerar o build
+- `POST /api/checkout`: cria um checkout por tentativa e ignora preço do navegador.
+- `POST /api/webhooks/asaas`: autentica e processa eventos idempotentemente.
+- `GET /api/pedido`: consulta privada do estado do pedido.
+- `GET /pedido`: retorno seguro do checkout.
+- `GET /api/download`: entrega o PDF somente com direito ativo.
+- `GET /api/pagamentos/asaas`: reconciliação pontual e privada.
 
-```powershell
-npm run lint
-npm test
-npm run build
-npm run test:e2e
-npm start
-npm run check:production
+O link público a ser enviado aos compradores é somente:
+
+```text
+https://pesdeseda.com.br
 ```
 
-`npm run test:e2e` usa o build existente, inicia a prévia em `127.0.0.1:3100` e executa o Chromium. Rode `npm run build` antes. As capturas são gravadas em `evidencias/`.
+O link do checkout Asaas é dinâmico e criado individualmente para cada pedido.
 
-A matriz responsiva automatizada cobre 320, 360, 390, 768, 1024 e 1440 px, além de teclado e preferência por movimento reduzido.
+## Documentação complementar
 
-O comando completo verificado nesta entrega é:
+- [Operação Asaas em produção](docs/operacao/ASAAS-PRODUCAO.md)
+- [Plano e resultados](doc/07-Plano-e-verificacao.md)
+- [Sistema visual](DESIGN.md)
+- [Verdade do produto](PRODUCT.md)
 
-```powershell
-npm run lint
-npm test
-npm run build
-npx playwright test --reporter=line
-```
-
-## Configuração comercial
-
-Copie `.env.example` para `.env.local`, mas não versione segredos. A demonstração segura usa:
-
-```dotenv
-SALES_ENABLED=false
-CHECKOUT_MODE=disabled
-```
-
-O Sandbox foi validado com credencial local, preço de R$ 49,90, Pix e cartão. O Asaas exige callbacks HTTPS públicos: durante a avaliação local eles apontam para o próprio domínio Sandbox e não retornam à aplicação. Para homologar o ciclo completo ainda são necessários uma URL pública HTTPS para callbacks e webhook, PDF revisado em armazenamento privado e configuração de e-mail. Somente no Sandbox, `CHECKOUT_MODE=asaas` e `SALES_ENABLED=true` habilitam a criação.
-
-Se o token Asaas começar com `$`, escape o primeiro caractere no arquivo `.env.local` (`\$...`) para impedir que o carregador de variáveis do Next.js tente expandi-lo. Nunca versione esse arquivo.
-
-Produção usa banco, credenciais, webhook e origem separados do sandbox. Não copie IDs ou dados de compradores entre ambientes. O callback apenas volta à página do pedido; somente `CHECKOUT_PAID` ativa o direito.
-
-### Preparação para publicação
-
-O arquivo `.env.production.example` contém o contrato de implantação sem segredos. Copie-o para `.env.production.local` apenas para uma verificação local; na hospedagem, cadastre os mesmos nomes no cofre de variáveis do provedor. O arquivo local de produção é ignorado pelo Git.
-
-```powershell
-Copy-Item .env.production.example .env.production.local
-npm run check:production
-```
-
-O primeiro deploy deve permanecer com `SALES_ENABLED=false`. Depois de configurar domínio HTTPS, chave Asaas de produção, webhook, PDF privado e armazenamento persistente, execute uma compra controlada e valide o evento `CHECKOUT_PAID`. Somente com aprovação expressa do titular altere para `SALES_ENABLED=true` e rode `npm run check:production:go-live`.
-
-Os endereços e o procedimento completo estão em [`docs/operacao/ASAAS-PRODUCAO.md`](docs/operacao/ASAAS-PRODUCAO.md). O SQLite atual só é aceitável em uma instância Node.js única com volume persistente; hospedagem serverless ou múltiplas instâncias exige implementar o repositório PostgreSQL já previsto na arquitetura.
-
-## Rotas
-
-- `POST /api/checkout`: mesma origem, produto e chave de tentativa; ignora qualquer preço do navegador.
-- `POST /api/webhooks/asaas`: valida `asaas-access-token`, persiste o ID do evento e aplica mudanças idempotentes.
-- `GET /api/pedido`: consulta privada do estado persistido para atualizar a página; não consulta nem substitui o webhook do Asaas.
-- `GET /api/pagamentos/asaas?pedido=...&acesso=...&cobranca=pay_...`: consulta pontual e privada `GET /v3/payments/{id}` no servidor, valida pedido e preço de R$ 49,90 e não altera o estado local.
-- `GET /pedido`: exige ID e token privado; o retorno antecipado mostra “Aguardando confirmação”.
-- `GET /api/download`: revalida pedido e direito antes de ler o PDF privado.
-- `POST /api/recuperar`: resposta neutra; o envio de link ainda depende do provedor de e-mail e da captura confirmada do endereço.
-
-## Limites desta versão
-
-O UI/UX Pro Max foi instalado localmente e seu checklist foi aplicado, mas a busca automatizada não rodou porque não há Python executável neste computador. Impeccable 4.8.0 e Taste Skill também estão disponíveis no projeto. No redesign de 04/11/2026, o catálogo 21st.dev foi pesquisado. Foram efetivamente consultados [Editorial Hero, de @felipemenezes098](https://21st.dev/@felipemenezes098/components/hero-05), [Editorial service list, de @ibrandify](https://21st.dev/@ibrandify/components/editorial-service-list) e [Accessible Accordion, de @a11ypros](https://21st.dev/@a11ypros/components/a11y-accordion). Eles orientaram assimetria, linhas editoriais e semântica; nenhum componente foi instalado ou copiado nesta rodada. Newsletter, relatos, contato público, termos e política permanecem ocultos ou marcados como preparação.
-
-Referências técnicas confirmadas em 3 de novembro de 2026: [criação de checkout](https://docs.asaas.com/reference/criar-novo-checkout), [consulta de uma cobrança](https://docs.asaas.com/reference/recuperar-uma-unica-cobranca), [link e redirecionamento](https://docs.asaas.com/docs/link-do-checkout-e-redirecionamento-do-cliente), [eventos do checkout](https://docs.asaas.com/docs/checkout-events), [eventos de cobranças](https://docs.asaas.com/docs/webhook-para-cobrancas) e [recebimento de webhooks](https://docs.asaas.com/docs/receive-asaas-events-at-your-webhook-endpoint).
+Referências oficiais: [Asaas Checkout](https://docs.asaas.com/docs/checkout-asaas), [autenticação](https://docs.asaas.com/docs/authentication-2), [webhooks](https://docs.asaas.com/docs/about-webhooks) e [prontidão para produção](https://docs.asaas.com/docs/production-readiness).
