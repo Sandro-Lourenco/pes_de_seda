@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "project": {
+    "name": "pes-de-seda",
+    "productType": "editorial ebook landing page",
+    "stack": [
+      "nextjs",
+      "react"
+    ]
+  },
+  "sources": {
+    "tokens": [
+      "src/app/globals.css"
+    ],
+    "components": [],
+    "assets": [],
+    "instructions": [
+      "AGENTS.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": {},
+    "typography": {},
+    "spacing": {
+      "--container": {
+        "value": "1200px",
+        "source": "src/app/globals.css"
+      },
+      "--gutter": {
+        "value": "1rem",
+        "source": "src/app/globals.css"
+      }
+    },
+    "radius": {},
+    "shadows": {},
+    "motion": {
+      "--ease": {
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "source": "src/app/globals.css"
+      }
+    },
+    "density": "unknown"
+  },
+  "components": {
+    "installed": [
+      "Adapted Editorial Hero by @felipemenezes098 (MIT)",
+      "Adapted Accessible Accordion by @a11ypros (MIT)"
+    ],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": [
+      "Preserve the paper, ink, leaf, ceramic, linen and focus tokens from doc/02-Design-system.md",
+      "Render title and primary action before the cover on mobile",
+      "Keep all content readable with reduced motion"
+    ],
+    "avoid": [
+      "Generic spa photography",
+      "Unapproved testimonials, countdowns or clinical claims",
+      "Glass effects and repeated card grids"
+    ]
+  },
+  "decisions": [
+    {
+      "decision": "Family-book editorial direction with a paper texture, numbered index and curved silk thread",
+      "reason": "Selected from the repository design specification and adapted from Editorial Hero by @felipemenezes098 on 21st.dev"
+    },
+    {
+      "decision": "Premium restrained motion using 8px cover entrance and 2px CTA icon feedback",
+      "reason": "Matches doc/03 and keeps motion optional through MotionConfig"
+    },
+    {
+      "decision": "Native details/summary FAQ with single-open coordination",
+      "reason": "Adapted from Accessible Accordion by @a11ypros on 21st.dev"
+    },
+    {
+      "decision": "Contemporary family-notebook composition without synthetic photography",
+      "reason": "The premium redesign replaces the predictable image-and-copy hero with typographic hierarchy, folios, hairlines and one silk-thread gesture; authorized photography remains pending"
+    },
+    {
+      "decision": "Author section behaves as an unboxed dedication and the offer as a colophon",
+      "reason": "This varies the page rhythm, removes repeated rounded cards and keeps price, product facts and purchase action explicit"
+    },
+    {
+      "decision": "Motion personality set to premium with visible initial HTML and transform-only reveals",
+      "reason": "Motion guides hierarchy and feedback without hiding content or delaying purchase; reduced motion remains supported"
+    },
+    {
+      "decision": "Studio concept direction with warm editorial photography, numbered chapters and alternating cream, forest and sage surfaces",
+      "reason": "Selected by the owner from the authenticated Pés de Seda concept site; local implementation preserves the production checkout and uses the supplied visual assets"
+    },
+    {
+      "decision": "Product-led opening with title, author, contents, price and purchase path visible before the atmospheric image on mobile",
+      "reason": "Grounded in current e-book landing-page research and the Editorial Image Hero by @felipemenezes098: https://21st.dev/@felipemenezes098/components/hero-07"
+    },
+    {
+      "decision": "Linear high-contrast FAQ and oversized typographic ending",
+      "reason": "Grounded in the FAQ Accordion Section by @kedhareswer and Giant Wordmark Footer by @kedhareswer: https://21st.dev/@kedhareswer/components/slit-type-faq and https://21st.dev/@kedhareswer/components/kiln-wordmark-footer"
+    },
+    {
+      "decision": "Minimal six-part editorial flow with one dominant purchase action",
+      "reason": "Removed decorative folios, texture, redundant reading-ritual copy and the commercially unconfirmed bonus so the book, author and offer carry the page"
+    }
+  ],
+  "evidence": [
+    {
+      "fact": "design.colorMode:light",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "design.tokens",
+      "source": "src/app/globals.css"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "AGENTS.md"
+    },
+    {
+      "fact": "project.stack:nextjs",
+      "source": "package.json"
+    },
+    {
+      "fact": "project.stack:react",
+      "source": "package.json"
+    }
+  ],
+  "generatedAt": "2026-11-04T01:50:18.542Z"
+}
