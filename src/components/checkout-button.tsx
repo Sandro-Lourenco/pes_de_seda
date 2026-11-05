@@ -49,7 +49,7 @@ export function CheckoutButton({ enabled, priceLabel }: CheckoutButtonProps) {
         <span>{label}</span>
       </button>
       <p id="checkout-help" className="offer__help">
-        Pagamento pelo Asaas. O download será liberado somente após a confirmação.
+        Pagamento seguro pelo Asaas com Pix ou cartão de crédito. O download será liberado somente após a confirmação.
       </p>
       <p id="checkout-status" className="checkout-status" role="status" aria-live="polite">
         {status === "error" ? "Não foi possível abrir o pagamento. Tente novamente." : status === "loading" ? "Preparando um checkout seguro." : ""}

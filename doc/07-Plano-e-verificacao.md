@@ -189,3 +189,31 @@ As capturas foram geradas contra `next start`, sem compradores, credenciais ou P
 - O vídeo foi amostrado em oito quadros; o instante de 4,5 segundos foi escolhido por apresentar a frente do livro com melhor legibilidade e perspectiva. O recorte otimizado foi salvo em `public/assets/book-cover-video.webp`.
 - O componente compartilhado `BookCover` passou a usar essa imagem na narrativa do conteúdo e na oferta, mantendo texto alternativo, dimensões estáveis e carregamento otimizado pelo Next.js.
 - Verificação: lint passou; Vitest passou 11/11; build de produção passou; Playwright passou 11/11 em 320, 360, 390, 768, 1024 e 1440 px. O detector final do Impeccable encontrou zero antipadrões.
+
+### Mockup dedicado na narrativa — 05/11/2026
+
+- A pedido do titular, a imagem anterior da seção “Cuidado, palavra por palavra” foi retirada e substituída pelo arquivo fornecido `Mockup do e-book Pés de Seda.png`.
+- A versão otimizada foi salva como `public/assets/story-book-mockup.webp` e usada somente nessa narrativa. A capa da oferta permanece independente.
+
+### Refatoração editorial Unslop — 05/11/2026
+
+- A primeira página do arquivo privado `Pés de seda.pdf` foi comparada às cinco representações existentes. `public/assets/capa-pes-de-seda.webp` corresponde fielmente à capa do PDF e passou a ser a única capa exibida; o PDF comercial permaneceu fora da pasta pública.
+- O hero combina a capa oficial intacta com a natureza-morta já disponível, preservando título, crédito e texto da arte. No celular, título, proposta e ação continuam antes da imagem.
+- Foram removidos parallax, movimentos decorativos, fólios repetitivos, itálico sistemático, texto provisório da autora e a cor lavanda desconectada da marca. A página agora alterna papel, linho e verde profundo em composições assimétricas.
+- A seção da autora permanece tipográfica, sem retrato fictício. A oferta foi tratada como colofão comercial e continua usando o preço canônico de R$ 49,90 e o mesmo `CheckoutButton`.
+- Nenhum arquivo de API, Asaas, webhook, banco, pedido, download, preço, segurança ou contrato comercial foi alterado.
+- UI/UX Pro Max: as regras locais de acessibilidade, alvos de toque, 4/8 px, contraste, responsividade e movimento reduzido foram aplicadas. A busca automatizada não executou porque o ambiente não possui Python funcional; nenhuma instalação de sistema foi feita.
+- Impeccable: o detector foi executado uma vez nos alvos alterados e retornou apenas 16 avisos consultivos de novos passos tipográficos e tons da rampa editorial; não houve antipadrão bloqueante.
+- Validação no navegador: 320, 390, 768, 1440 e 1920 px sem transbordamento; foco inicial no link de salto; FAQ operável; hero e oferta legíveis; `prefers-reduced-motion` reduziu transições para atualização imediata.
+- Testes: `npm run lint` passou; Vitest passou 11/11; `npm run build` compilou todas as rotas; Playwright passou 12/12, incluindo 1920 px, teclado, FAQ e movimento reduzido.
+- Evidências completas sem dados pessoais: `evidencias/unslop-before-1440.png`, `evidencias/unslop-before-390.png`, `evidencias/unslop-after-1440.png` e `evidencias/unslop-after-390.png`.
+- A metodologia Unslop é de Damir Sokolovsky (@heydamir), licenciada sob CC BY 4.0.
+
+### Preparação Asaas para produção — 05/11/2026
+
+- A documentação oficial foi revisada novamente. O payload já oferecia `PIX` e `CREDIT_CARD` no mesmo checkout, com compra única (`DETACHED`) e preço canônico de 4.990 centavos no servidor.
+- O domínio do checkout de produção foi alinhado ao endereço oficial `https://asaas.com/checkoutSession/show?id=...`; o Sandbox permanece separado em `https://sandbox.asaas.com`.
+- Os callbacks agora são montados com a API `URL`, preservando query strings existentes e codificando ID e token privados do pedido.
+- Foram criados `.env.production.example`, `scripts/check-production-readiness.mjs` e `docs/operacao/ASAAS-PRODUCAO.md`. A checagem reprova URL local, preço divergente, token de webhook inválido, PDF público e abertura sem configuração completa, sem imprimir segredos.
+- A interface informa explicitamente Pix e cartão. O checkout continua fechado em produção até domínio, banco persistente, PDF privado, webhook real, compra controlada e aprovação expressa do titular.
+- Verificação observada: `npm run lint` passou; Vitest passou 12/12; `npm run build` compilou todas as rotas; Playwright passou 12/12; o modelo incompleto foi reprovado pela trava e uma configuração inteiramente fictícia completa foi aprovada, sem chamada externa.

@@ -57,9 +57,9 @@ export function SiteHeader() {
             exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
             transition={{ duration: reducedMotion ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            {links.map(([label, href], index) => (
+            {links.map(([label, href]) => (
               <a href={href} key={href} onClick={() => setOpen(false)}>
-                <span aria-hidden="true">0{index + 1}</span>{label}
+                {label}
               </a>
             ))}
             <a className="mobile-menu__offer" href="#oferta" onClick={() => setOpen(false)}>Comprar o e-book</a>

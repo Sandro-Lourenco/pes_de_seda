@@ -4,11 +4,11 @@ test("abertura, autora, oferta e FAQ permanecem navegáveis", async ({ page }) =
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Pés de Seda" })).toBeVisible();
   await page.locator("#inicio").getByRole("link", { name: "Conhecer o conteúdo" }).click();
-  await expect(page.getByRole("heading", { name: "Cuidado, palavra por palavra." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Cuidado, palavra por palavra" })).toBeVisible();
   await page.locator("#autora").scrollIntoViewIfNeeded();
-  await expect(page.getByRole("heading", { name: "Ana Maria Lourenço." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ana Maria Lourenço" })).toBeVisible();
   await page.locator("#oferta").scrollIntoViewIfNeeded();
-  await expect(page.getByRole("heading", { name: "Pequenos gestos. Um novo ritual." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Leve Pés de Seda para sua rotina" })).toBeVisible();
   await expect(page.getByText("R$ 49,90", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: /Comprar por R\$ 49,90|Vendas em preparação/ })).toBeVisible();
   const question = page.getByText("Essa receita realmente funciona?", { exact: true });
@@ -28,7 +28,7 @@ test("navegação por teclado alcança o conteúdo e abre o FAQ", async ({ page 
   await expect(page.getByText("O livro registra uma experiência familiar.", { exact: false })).toBeVisible();
 });
 
-for (const width of [320, 360, 390, 768, 1024, 1440]) {
+for (const width of [320, 360, 390, 768, 1024, 1440, 1920]) {
   test(`não apresenta transbordamento horizontal em ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: width < 600 ? 844 : 1000 });
     await page.goto("/");
@@ -41,5 +41,5 @@ test("mantém conteúdo visível com movimento reduzido", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Pés de Seda" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Perguntas que acolhem respostas." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Antes de comprar" })).toBeVisible();
 });

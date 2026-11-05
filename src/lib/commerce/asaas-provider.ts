@@ -16,11 +16,10 @@ export class AsaasCheckoutProvider implements CheckoutProvider {
     if (!accessToken) throw new Error("Credencial Asaas não configurada.");
     if (input.priceCents !== PRODUCT.priceCents) throw new Error("Preço divergente da oferta canônica.");
 
-    const callbackQuery = new URLSearchParams({ pedido: input.orderId, acesso: input.accessToken });
     const callback = {
-      successUrl: `${requiredUrl("ASAAS_SUCCESS_URL")}?${callbackQuery}`,
-      cancelUrl: `${requiredUrl("ASAAS_CANCEL_URL")}?${callbackQuery}&retorno=cancelado`,
-      expiredUrl: `${requiredUrl("ASAAS_EXPIRED_URL")}?${callbackQuery}&retorno=expirado`,
+      successUrl: callbackUrl("ASAAS_SUCCESS_URL", input.orderId, input.accessToken),
+      cancelUrl: callbackUrl("ASAAS_CANCEL_URL", input.orderId, input.accessToken, "cancelado"),
+      expiredUrl: callbackUrl("ASAAS_EXPIRED_URL", input.orderId, input.accessToken, "expirado"),
     };
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8_000);
@@ -54,7 +53,7 @@ export class AsaasCheckoutProvider implements CheckoutProvider {
         throw new Error(`Asaas respondeu HTTP ${response.status}${details ? `: ${details}` : "."}`);
       }
       const data = (await response.json()) as { id: string };
-      const checkoutOrigin = apiUrl.includes("sandbox") ? "https://sandbox.asaas.com" : "https://www.asaas.com";
+      const checkoutOrigin = apiUrl.includes("sandbox") ? "https://sandbox.asaas.com" : "https://asaas.com";
       return { id: data.id, url: `${checkoutOrigin}/checkoutSession/show?id=${encodeURIComponent(data.id)}` };
     } finally {
       clearTimeout(timeout);
@@ -114,6 +113,14 @@ function requiredUrl(name: string) {
   const value = process.env[name];
   if (!value) throw new Error(`${name} não configurada.`);
   return value;
+}
+
+function callbackUrl(name: string, orderId: string, accessToken: string, result?: string) {
+  const url = new URL(requiredUrl(name));
+  url.searchParams.set("pedido", orderId);
+  url.searchParams.set("acesso", accessToken);
+  if (result) url.searchParams.set("retorno", result);
+  return url.toString();
 }
 
 async function readAsaasError(response: Response) {

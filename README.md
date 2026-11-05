@@ -7,7 +7,7 @@ Primeira versão navegável da landing page do e-book **Pés de Seda**, de Ana M
 - Interface responsiva com HTML inicial renderizado pelo Next.js.
 - Direção visual de caderno de família contemporâneo, sem fotografia sintética: história entre gerações, índice em linhas, experiência de leitura, autora como dedicatória e oferta como colofão.
 - Movimento com `motion/react`, respeitando `prefers-reduced-motion`.
-- Checkout Asaas implementado no servidor e validado no Sandbox; continua desativado por padrão no arquivo de exemplo.
+- Checkout Asaas implementado no servidor com Pix e cartão de crédito e validado no Sandbox; continua desativado por padrão.
 - Preço canônico lido somente de `PRODUCT_PRICE_CENTS` no servidor.
 - Pedidos, tentativas, eventos e direitos persistidos em SQLite na simulação local.
 - PDF lido apenas de caminho privado configurado em `PDF_STORAGE_KEY`; nenhum PDF existe em `public/` ou nos testes.
@@ -55,6 +55,7 @@ npm test
 npm run build
 npm run test:e2e
 npm start
+npm run check:production
 ```
 
 `npm run test:e2e` usa o build existente, inicia a prévia em `127.0.0.1:3100` e executa o Chromium. Rode `npm run build` antes. As capturas são gravadas em `evidencias/`.
@@ -84,6 +85,19 @@ O Sandbox foi validado com credencial local, preço de R$ 49,90, Pix e cartão. 
 Se o token Asaas começar com `$`, escape o primeiro caractere no arquivo `.env.local` (`\$...`) para impedir que o carregador de variáveis do Next.js tente expandi-lo. Nunca versione esse arquivo.
 
 Produção usa banco, credenciais, webhook e origem separados do sandbox. Não copie IDs ou dados de compradores entre ambientes. O callback apenas volta à página do pedido; somente `CHECKOUT_PAID` ativa o direito.
+
+### Preparação para publicação
+
+O arquivo `.env.production.example` contém o contrato de implantação sem segredos. Copie-o para `.env.production.local` apenas para uma verificação local; na hospedagem, cadastre os mesmos nomes no cofre de variáveis do provedor. O arquivo local de produção é ignorado pelo Git.
+
+```powershell
+Copy-Item .env.production.example .env.production.local
+npm run check:production
+```
+
+O primeiro deploy deve permanecer com `SALES_ENABLED=false`. Depois de configurar domínio HTTPS, chave Asaas de produção, webhook, PDF privado e armazenamento persistente, execute uma compra controlada e valide o evento `CHECKOUT_PAID`. Somente com aprovação expressa do titular altere para `SALES_ENABLED=true` e rode `npm run check:production:go-live`.
+
+Os endereços e o procedimento completo estão em [`docs/operacao/ASAAS-PRODUCAO.md`](docs/operacao/ASAAS-PRODUCAO.md). O SQLite atual só é aceitável em uma instância Node.js única com volume persistente; hospedagem serverless ou múltiplas instâncias exige implementar o repositório PostgreSQL já previsto na arquitetura.
 
 ## Rotas
 

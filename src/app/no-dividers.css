@@ -1,0 +1,8 @@
+/* Remove linhas decorativas com cores hardcoded (rgba/rgb) */
+.landing-page .offer__facts div:nth-child(even) { border-left: 0; }
+.landing-page .ritual__cadence p + p { border-top: 0; }
+.landing-page .site-footer__top { border-bottom: 0; }
+.landing-page .offer__visual { border-right: 0; }
+.landing-page .faq-list { border-top: 0; }
+.landing-page .faq-item { border-bottom: 0; }
+

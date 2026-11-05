@@ -36,12 +36,37 @@ describe("adaptador Asaas", () => {
     expect(payload.billingTypes).toEqual(["PIX", "CREDIT_CARD"]);
     expect(payload.chargeTypes).toEqual(["DETACHED"]);
     expect(payload.externalReference).toBe("ord_teste_4990");
+    expect(payload.callback).toEqual({
+      successUrl: "https://exemplo.test/pedido?pedido=ord_teste_4990&acesso=acesso-privado-do-pedido",
+      cancelUrl: "https://exemplo.test/pedido?pedido=ord_teste_4990&acesso=acesso-privado-do-pedido&retorno=cancelado",
+      expiredUrl: "https://exemplo.test/pedido?pedido=ord_teste_4990&acesso=acesso-privado-do-pedido&retorno=expirado",
+    });
     expect(payload.items).toEqual([{
       name: "E-book Pés de Seda",
       description: "Edição digital em PDF, 41 páginas",
       quantity: 1,
       value: 49.9,
     }]);
+  });
+
+  it("monta o link oficial do checkout no ambiente de produção", async () => {
+    vi.stubEnv("ASAAS_ACCESS_TOKEN", "token-exclusivo-do-servidor");
+    vi.stubEnv("ASAAS_API_URL", "https://api.asaas.com/v3");
+    vi.stubEnv("ASAAS_SUCCESS_URL", "https://pesdeseda.example/pedido");
+    vi.stubEnv("ASAAS_CANCEL_URL", "https://pesdeseda.example/pedido");
+    vi.stubEnv("ASAAS_EXPIRED_URL", "https://pesdeseda.example/pedido");
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ id: "chk_producao" }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    })));
+
+    const result = await new AsaasCheckoutProvider().create({
+      orderId: "ord_producao",
+      accessToken: "acesso-producao",
+      priceCents: 4_990,
+    });
+
+    expect(result.url).toBe("https://asaas.com/checkoutSession/show?id=chk_producao");
   });
 
   it("recusa qualquer preço divergente antes de chamar o Asaas", async () => {

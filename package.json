@@ -14,6 +14,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "check:production": "node --env-file-if-exists=.env.production.local scripts/check-production-readiness.mjs",
+    "check:production:go-live": "node --env-file-if-exists=.env.production.local scripts/check-production-readiness.mjs --go-live",
     "check": "npm run lint && npm run test && npm run build"
   },
   "dependencies": {

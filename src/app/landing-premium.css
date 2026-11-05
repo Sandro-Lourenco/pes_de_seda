@@ -1262,3 +1262,111 @@
     font-size: clamp(3.2rem, 15vw, 4.5rem);
   }
 }
+
+/* ── Imagem da seção herança como background ── */
+.landing-page .heritage {
+  position: relative;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.landing-page .heritage .section-folio {
+  margin-bottom: 0;
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.landing-page .hero {
+  margin-bottom: 0;
+}
+
+.landing-page .heritage__bg {
+  position: relative;
+  min-height: clamp(480px, 70vh, 780px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.landing-page .heritage__bg-img {
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+.landing-page .heritage__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(16 55 44 / 0.15) 0%,
+    rgb(16 55 44 / 0.55) 55%,
+    rgb(16 55 44 / 0.88) 100%
+  );
+}
+
+.landing-page .heritage .section-folio {
+  position: relative;
+  z-index: 2;
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+  color: rgb(220 230 223 / 0.75);
+}
+
+.landing-page .heritage .heritage__grid {
+  position: relative;
+  z-index: 2;
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  color: var(--sage, #d7e0cd);
+}
+
+.landing-page .heritage .heritage__title h2,
+.landing-page .heritage .heritage__title h2 em {
+  color: #f4ede2;
+}
+
+.landing-page .heritage .heritage__copy p {
+  color: #cedad4;
+}
+
+.landing-page .heritage .heritage__lead {
+  color: #e8d8c8 !important;
+}
+
+/* ── Remove todas as linhas divisórias decorativas ── */
+.landing-page {
+  --divider: transparent;
+}
+
+.landing-page .reading-note,
+.landing-page .chapter-list,
+.landing-page .faq-list,
+.landing-page .author__quote,
+.landing-page .author__pending,
+.landing-page .offer__facts,
+.landing-page .offer__visual,
+.landing-page .hero__caption,
+.landing-page .hero__facts,
+.landing-page .site-footer__top {
+  border: 0;
+}
+
+.landing-page .chapter-list li,
+.landing-page .offer__facts div,
+.landing-page .faq-item {
+  border: 0;
+}
+
+.landing-page .ritual__cadence {
+  border-block: 0;
+}
+
+.landing-page .ritual__cadence p + p {
+  border-left: 0;
+}
+
+.landing-page .heritage__line i {
+  background: transparent;
+}
+
+.landing-page .hero__edition::before {
+  display: none;
+}

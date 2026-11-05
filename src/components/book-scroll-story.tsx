@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
-import { BookCover } from "@/components/book-cover";
+import Image from "next/image";
+import { motion, useReducedMotion } from "motion/react";
 
 const passages = [
   {
@@ -20,32 +19,33 @@ const passages = [
 ];
 
 export function BookScrollStory() {
-  const sectionRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
-  const rotate = useTransform(scrollYProgress, [0, 0.5, 1], [-4, 2, 5]);
-  const lift = useTransform(scrollYProgress, [0, 0.5, 1], [18, -10, 14]);
-  const boxShadow = useTransform(scrollYProgress, [0, 0.5, 1], [
-    "0 24px 52px rgb(5 18 8 / .2)",
-    "0 32px 70px rgb(5 18 8 / .34)",
-    "0 26px 58px rgb(5 18 8 / .22)",
-  ]);
 
   return (
-    <section className="book-story" id="ebook" ref={sectionRef} aria-labelledby="chapters-title">
+    <section className="book-story" id="ebook" aria-labelledby="chapters-title">
       <div className="container book-story__heading">
-        <h2 id="chapters-title">Cuidado, <em>palavra</em> por palavra.</h2>
-        <p>O livro se revela aos poucos — como uma conversa tranquila, feita para acompanhar e consultar.</p>
+        <h2 id="chapters-title">Cuidado, palavra por palavra</h2>
+        <p>O livro se revela aos poucos, como uma conversa tranquila feita para acompanhar e consultar.</p>
       </div>
       <div className="container book-story__layout">
         <figure className="book-story__stage">
           <motion.div
             className="book-story__book"
-            style={reducedMotion ? undefined : { rotate, y: lift, boxShadow }}
+            initial={reducedMotion ? false : { y: 8 }}
+            whileInView={{ y: 0 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: reducedMotion ? 0 : 0.38, ease: [0.22, 1, 0.36, 1] }}
           >
-            <BookCover />
+            <Image
+              className="book-story__mockup"
+              src="/assets/capa-pes-de-seda.webp"
+              alt="Capa oficial do e-book Pés de Seda"
+              width={900}
+              height={1406}
+              sizes="(max-width: 900px) 64vw, 340px"
+            />
           </motion.div>
-          <figcaption>Representação visual. O produto é entregue em formato digital.</figcaption>
+          <figcaption>O produto é entregue em formato digital.</figcaption>
         </figure>
         <ol className="book-story__passages">
           {passages.map((passage, index) => (

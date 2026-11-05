@@ -202,16 +202,17 @@
 }
 
 .landing-page .book-story__heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(18rem, .55fr);
-  gap: 3rem;
-  align-items: end;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
   padding-bottom: clamp(4rem, 8vw, 7rem);
-  border-bottom: 1px solid rgb(248 240 228 / .2);
+  border-bottom: 0;
 }
 
 .landing-page .book-story__heading h2 {
-  max-width: 10ch;
+  max-width: 14ch;
   margin: 0;
   color: #f8f0e4;
   font-size: clamp(3.2rem, 6.5vw, 6rem);
@@ -220,7 +221,7 @@
 
 .landing-page .book-story__heading h2 em { color: #c8cd8d; }
 .landing-page .book-story__heading > p {
-  max-width: 34ch;
+  max-width: 42ch;
   margin: 0;
   color: #d5d8c5;
   font-size: 1.08rem;
@@ -246,16 +247,20 @@
 }
 
 .landing-page .book-story__book {
-  min-height: clamp(30rem, 53vw, 46rem);
+  min-height: 0;
   display: grid;
   place-items: center;
-  background: #f2e7d2;
+  overflow: hidden;
+  background: #142510;
   box-shadow: 0 28px 60px rgb(5 18 8 / .26);
   transform-origin: 50% 70%;
 }
 
-.landing-page .book-story__book .book-cover {
-  width: min(56%, 23rem);
+.landing-page .book-story__mockup {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .landing-page .book-cover__image {
@@ -426,9 +431,7 @@
   .landing-page .hero__image img { object-position: 72% center; }
   .landing-page .book-story__heading h2 { font-size: clamp(3rem, 15vw, 4.6rem); }
   .landing-page .book-story__stage { padding-top: 2.5rem; }
-  .landing-page .book-story__book { min-height: 27rem; }
   .landing-page .book-story__stage figcaption { margin-top: 2rem; }
-  .landing-page .book-story__book .book-cover { width: min(68%, 17rem); }
   .landing-page .offer__visual .book-cover { width: min(64%, 280px); }
   .landing-page .book-story .reading-note { grid-template-columns: 1fr; gap: .75rem; }
   .landing-page .author__grid { display: flex; flex-direction: column; gap: 3.5rem; }
