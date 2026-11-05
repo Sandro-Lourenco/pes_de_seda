@@ -176,13 +176,13 @@ components:
 
 ## Overview
 
-**Creative North Star: “Caderno de família contemporâneo”**
+**Creative North Star: “Estúdio botânico de uma história de família”**
 
-Pés de Seda transforma uma história íntima em uma edição digital serena, humana e criteriosa. A linguagem combina o calor tátil de papel, linho e cerâmica com a disciplina de uma publicação contemporânea: margens amplas, fólios, linhas finas, índice numerado e composições deliberadamente assimétricas.
+Pés de Seda transforma uma história íntima em uma edição digital serena, humana e criteriosa. A linguagem combina luz natural, papel quente, linho, pedra e folhas com a disciplina de uma publicação contemporânea: margens amplas, linhas finas, índice numerado e composições deliberadamente assimétricas.
 
-A variação “estúdio editorial” concentra a abertura em dois gestos: uma capa provisória encenada sobre lavanda acinzentado e uma coluna de decisão em papel neutro. A referência externa informa escala, silêncio e ritmo; textos, prova social, promessas e componentes permanecem próprios de Pés de Seda.
+A abertura concentra a atenção em dois gestos: o e-book encenado como objeto em uma natureza-morta botânica e uma coluna de decisão no espaço negativo da fotografia. A referência fornecida informa luz, materialidade e ritmo; textos, prova social, promessas e componentes permanecem próprios de Pés de Seda.
 
-A interface informa antes de persuadir. A capa é uma representação editorial temporária claramente marcada como prévia; a autora aparece como dedicatória, sem card promocional; e a oferta encerra a narrativa como um colofão. Até existirem ativos autorizados, tipografia, cor e o fio curvo carregam a identidade — nunca fotografia sintética.
+A interface informa antes de persuadir. A imagem de abertura é identificada como representação visual e não como fotografia documental; a autora aparece como dedicatória, sem retrato inventado nem card promocional; e a oferta encerra a narrativa como um colofão. A capa final continua pendente de aprovação.
 
 **Key Characteristics:**
 
@@ -303,7 +303,7 @@ Objeto 3:4 de linho/papel, título serifado, fio de cerâmica e microtipografia 
 
 ### Don't:
 
-- **Don't** usar fotografia sintética, retrato não autorizado ou imagem gerada como prova da marca.
+- **Don't** usar imagem gerada como prova, depoimento, retrato da autora ou registro de resultado. Representações de produto devem ser identificadas como tal.
 - **Don't** transformar conteúdo em uma grade de cards arredondados e sombreados.
 - **Don't** inventar depoimentos, resultados, autoridade clínica ou promessa de eficácia.
 - **Don't** aplicar Cerâmica indiscriminadamente ou introduzir cores saturadas alheias à paleta.

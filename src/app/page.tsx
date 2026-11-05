@@ -1,19 +1,14 @@
-import Image from "next/image";
 import "./landing-premium.css";
 import "./reference-inspired.css";
+import "./cinematic-premium.css";
 import { CheckoutButton } from "@/components/checkout-button";
 import { BookCover } from "@/components/book-cover";
+import { BookScrollStory } from "@/components/book-scroll-story";
 import { Faq } from "@/components/faq";
 import { EditorialHero } from "@/components/editorial-hero";
 import { Reveal } from "@/components/reveal";
 import { SiteHeader } from "@/components/site-header";
 import { formatProductPrice } from "@/lib/commerce/product";
-
-const chapters = [
-  { number: "01", title: "Entender o ressecamento", description: "Conheça os fatores que o livro associa à pele seca e às rachaduras." },
-  { number: "02", title: "Conhecer os ingredientes", description: "Veja como a autora apresenta os componentes da receita da família." },
-  { number: "03", title: "Ler sobre preparo e aplicação", description: "Acompanhe a descrição que Ana organizou para esta edição." },
-];
 
 export default function HomePage() {
   const salesEnabled = process.env.SALES_ENABLED === "true" && process.env.CHECKOUT_MODE === "asaas";
@@ -42,35 +37,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="chapters" id="ebook" aria-labelledby="chapters-title">
-          <span className="section-folio container" aria-hidden="true">02 / 06 · Um guia para ter sempre por perto</span>
-          <Reveal className="container chapters__intro">
-            <h2 id="chapters-title">Cuidado, <em>palavra</em> por palavra.</h2>
-            <p>Um material acolhedor e prático para entender os cuidados com os pés e acompanhar uma rotina inspirada em uma receita de família.</p>
-          </Reveal>
-          <div className="container chapters__body">
-            <div className="chapters__cover"><BookCover /></div>
-            <ol className="chapter-list">
-              {chapters.map((chapter, index) => (
-                <Reveal key={chapter.number} delay={index * 0.05}>
-                  <li>
-                    <span className="chapter-list__number">{chapter.number}</span>
-                    <div><h3>{chapter.title}</h3><p>{chapter.description}</p></div>
-                  </li>
-                </Reveal>
-              ))}
-            </ol>
-          </div>
-          <Reveal className="container reading-note">
-            <strong>Importante</strong>
-            <p>O e-book registra uma experiência familiar. Antes de usar qualquer preparação nos pés, procure orientação profissional, especialmente se você convive com diabetes ou alterações de sensibilidade.</p>
-          </Reveal>
-        </section>
+        <BookScrollStory />
 
         <section className="author" id="autora" aria-labelledby="author-title">
           <span className="section-folio container" aria-hidden="true">03 / 06 · Quem está por trás deste cuidado</span>
           <div className="container author__grid">
-            <Reveal className="author__image"><Image src="/assets/memoria-familia.webp" width={1200} height={1500} alt="Caderno antigo e flores que evocam memórias de família" /></Reveal>
             <Reveal className="author__quote">
               <span className="author__quote-mark" aria-hidden="true">“</span>
               <blockquote>

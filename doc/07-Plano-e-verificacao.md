@@ -172,3 +172,13 @@ As capturas foram geradas contra `next start`, sem compradores, credenciais ou P
 - O detector Impeccable retornou somente avisos consultivos de novos passos tipográficos e cores da variação, agora registrados em `DESIGN.md`; não houve achado funcional ou de acessibilidade.
 - Evidências sem dados pessoais: `evidencias/abertura-390.png`, `evidencias/abertura-1440.png`, `evidencias/autora-390.png` e `evidencias/oferta-1440.png`.
 - Verificação final: `npm run lint` passou; Vitest passou 11/11; `npm run build` compilou a página e todas as rotas; Playwright passou 11/11, incluindo 320, 360, 390, 768, 1024 e 1440 px, teclado, FAQ e movimento reduzido.
+
+### Direção botânica cinematográfica — 05/11/2026
+
+- A imagem fornecida pelo titular foi usada como direção de arte. Uma variação segura foi criada preservando luz, linho, pedra e folhas, mas substituindo a promessa clínica da capa por “Um cuidado de família” e completando o crédito “Ana Maria Lourenço”. A peça é identificada na interface como representação visual do e-book.
+- O hero ganhou fotografia em tela cheia no desktop e fluxo texto → ação → imagem no celular. O preço de R$ 49,90 continua vindo do servidor e a compra segue pelo componente transacional existente.
+- O índice virou uma narrativa de rolagem com capa provisória construída no projeto. Motion para React altera apenas transformação e sombra do objeto; com movimento reduzido, ele permanece estático. O vídeo fornecido não foi publicado porque ainda exibia uma promessa clínica não aprovada.
+- A seção da autora permanece tipográfica, sem inventar retrato. Checkout, API Asaas, webhooks, banco, download, rotas e regras de negócio não foram alterados.
+- Evidências sem dados pessoais: `evidencias/cinematic-desktop.png` e `evidencias/cinematic-mobile.png`.
+- Verificação final: `npm run lint` passou; Vitest passou 11/11; `npm run build` compilou a página e todas as rotas; Playwright passou 11/11, incluindo 320, 360, 390, 768, 1024 e 1440 px, teclado, FAQ e movimento reduzido.
+- O detector final do Impeccable encontrou zero antipadrões. As 28 observações consultivas correspondem à nova rampa botânica e aos passos tipográficos intencionais registrados nesta direção; não houve falha funcional ou de acessibilidade.
