@@ -182,3 +182,10 @@ As capturas foram geradas contra `next start`, sem compradores, credenciais ou P
 - Evidências sem dados pessoais: `evidencias/cinematic-desktop.png` e `evidencias/cinematic-mobile.png`.
 - Verificação final: `npm run lint` passou; Vitest passou 11/11; `npm run build` compilou a página e todas as rotas; Playwright passou 11/11, incluindo 320, 360, 390, 768, 1024 e 1440 px, teclado, FAQ e movimento reduzido.
 - O detector final do Impeccable encontrou zero antipadrões. As 28 observações consultivas correspondem à nova rampa botânica e aos passos tipográficos intencionais registrados nesta direção; não houve falha funcional ou de acessibilidade.
+
+### Capa extraída do vídeo — 05/11/2026
+
+- O titular solicitou manter a área da autora sem fotografia e substituir as capas provisórias pelo material do vídeo fornecido.
+- O vídeo foi amostrado em oito quadros; o instante de 4,5 segundos foi escolhido por apresentar a frente do livro com melhor legibilidade e perspectiva. O recorte otimizado foi salvo em `public/assets/book-cover-video.webp`.
+- O componente compartilhado `BookCover` passou a usar essa imagem na narrativa do conteúdo e na oferta, mantendo texto alternativo, dimensões estáveis e carregamento otimizado pelo Next.js.
+- Verificação: lint passou; Vitest passou 11/11; build de produção passou; Playwright passou 11/11 em 320, 360, 390, 768, 1024 e 1440 px. O detector final do Impeccable encontrou zero antipadrões.

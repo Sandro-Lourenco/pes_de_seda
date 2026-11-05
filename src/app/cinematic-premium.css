@@ -256,7 +256,22 @@
 
 .landing-page .book-story__book .book-cover {
   width: min(56%, 23rem);
-  filter: drop-shadow(16px 24px 19px rgb(39 34 18 / .22));
+}
+
+.landing-page .book-cover__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(12px 20px 18px rgb(39 34 18 / .16));
+}
+
+.landing-page .offer__visual .book-cover__image {
+  filter: drop-shadow(10px 18px 16px rgb(39 34 18 / .15));
+}
+
+.landing-page .offer__visual .book-cover {
+  width: min(66%, 380px);
+  margin: 0;
 }
 
 .landing-page .book-story__stage figcaption {
@@ -414,6 +429,7 @@
   .landing-page .book-story__book { min-height: 27rem; }
   .landing-page .book-story__stage figcaption { margin-top: 2rem; }
   .landing-page .book-story__book .book-cover { width: min(68%, 17rem); }
+  .landing-page .offer__visual .book-cover { width: min(64%, 280px); }
   .landing-page .book-story .reading-note { grid-template-columns: 1fr; gap: .75rem; }
   .landing-page .author__grid { display: flex; flex-direction: column; gap: 3.5rem; }
   .landing-page .author__copy { order: 1; }

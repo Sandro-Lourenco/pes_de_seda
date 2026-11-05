@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 
 export function BookCover({ compact = false }: { compact?: boolean }) {
@@ -10,19 +11,16 @@ export function BookCover({ compact = false }: { compact?: boolean }) {
       initial={reducedMotion ? false : { y: 8 }}
       animate={{ y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.42, ease: [0.16, 1, 0.3, 1] }}
-      aria-label="Representação editorial temporária da capa do e-book Pés de Seda"
+      aria-label="Capa do e-book Pés de Seda extraída do vídeo fornecido"
     >
-      <div className="book-cover__page">
-        <span className="book-cover__edition">Prévia editorial</span>
-        <span className="book-cover__thread" aria-hidden="true" />
-        <div className="book-cover__title">
-          <span>Pés</span>
-          <em>de</em>
-          <span>Seda</span>
-        </div>
-        <span className="book-cover__author">Ana Maria Lourenço</span>
-      </div>
-      {!compact && <figcaption>Capa final pendente de aprovação.</figcaption>}
+      <Image
+        className="book-cover__image"
+        src="/assets/book-cover-video.webp"
+        alt="Mockup tridimensional da capa verde e creme do e-book Pés de Seda"
+        width={760}
+        height={1160}
+        sizes={compact ? "(max-width: 680px) 55vw, 300px" : "(max-width: 680px) 70vw, 380px"}
+      />
     </motion.figure>
   );
 }
